@@ -7,6 +7,13 @@
 	<key>Buffer Order</key>
 	<array>
 		<string>Main</string>
+		<string>Time</string>
+		<string>Stage</string>
+		<string>Scenes</string>
+		<string>Touch</string>
+		<string>Action</string>
+		<string>Mix</string>
+		<string>StudioIntro</string>
 	</array>
 	<key>Description</key>
 	<string>No description available</string>
