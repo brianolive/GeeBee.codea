@@ -13,7 +13,9 @@
 		<string>Touch</string>
 		<string>Action</string>
 		<string>Mix</string>
+		<string>GeeBee</string>
 		<string>StudioIntro</string>
+		<string>Play</string>
 	</array>
 	<key>Description</key>
 	<string>No description available</string>

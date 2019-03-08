@@ -3,11 +3,7 @@ function scenes(n)
     
     scenes = {
         {studioIntroScene},
-        {menuScene},
-        {mixBoardScene},
-        {playScene},
-        {mixPracticeScene},
-        {newPlayScene}
+        {playScene}
     }
     
     function scenes.next(n, level)
