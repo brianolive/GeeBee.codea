@@ -25,19 +25,17 @@ end
 function getMixedColor()
     local r, g, b = 0, 0, 0
     local value = 0
-    local rowHeight = HEIGHT / 4
+    local rowHeight = HEIGHT / 3
     
     for i, v in ipairs(stage.mixedColor) do
-        if v.y > rowHeight * 3 and v.y < HEIGHT then
+        if v.y > rowHeight * 2 then
             value = 255
-        elseif v.y > rowHeight * 2 then
-            value = 191
         elseif v.y > rowHeight then
-            value = 127
+            value = 191
         else
-            value = 63
+            value = 127
         end
-        
+
         if v.x < WIDTH / 3 then
             r = value
         elseif v.x < (WIDTH / 3) * 2 then

@@ -5,8 +5,8 @@ function geeBee.set(c)
     
     local col = {c.r, c.g, c.b}
     local x = {56, 128, 200} 
-    local values = {63, 127, 191, 255}
-    local y = {50, 102, 155, 207}
+    local values = {127, 191, 255}
+    local y = {60, 128, 197}
     
     geeBee.img = image(256, 256)
     setContext(geeBee.img)
