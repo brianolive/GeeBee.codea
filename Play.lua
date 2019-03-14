@@ -17,7 +17,6 @@ function playScene()
         action = action or scene.action(start)
 
         -- start, stop, object (draw), action (tween)
-        --action{1, stop, play.mixBoard}
         action{1, stop, play.theGeeBee, "newColor"}
         action{2, stop, play.theGeeBee}
         action{60, stop, play.popper, "ifPop"}
@@ -36,7 +35,7 @@ end
 
 function Play()
     local numTubes = 8
-    local margin = 300
+    local margin = 200
     local playZone = (WIDTH - (margin * 2))
     local tubeSpacing = playZone / (numTubes - 1)
     local geeBeeSize = tubeSpacing / 2
@@ -90,26 +89,6 @@ function Play()
         end
     end
     
-    function play.mixBoard.draw()
-        pushStyle()
-        
-        stroke(127, 127, 127, 255)
-        strokeWidth(1)
-        
-        line(0, HEIGHT / 2, 200, HEIGHT / 2)
-        line(0, (HEIGHT / 6) * 2, 200, (HEIGHT / 6) * 2)
-        line(0, HEIGHT / 6, 200, HEIGHT / 6)
-        line(200, 0, 200, HEIGHT / 2)
-        
-        line(WIDTH - 400, HEIGHT / 2, WIDTH, HEIGHT / 2)
-        line(WIDTH - 400, (HEIGHT / 6) * 2, WIDTH, (HEIGHT / 6) * 2)
-        line(WIDTH - 400, HEIGHT / 6, WIDTH, HEIGHT / 6)
-        line(WIDTH - 400, 0, WIDTH - 400, HEIGHT / 2)
-        line(WIDTH - 200, 0, WIDTH - 200, HEIGHT / 2)
-        
-        popStyle()
-    end
-    
     function play.popper.ifPop(params)
         for i = 1, numTubes do
             if play.popper.tubes[i][2] == true and play.popper.tubes[i][3].y < 0 then
@@ -137,20 +116,28 @@ function Play()
             play.popper.tubes[tube][3].gravityScale = 8
             play.popper.tubes[tube][3].categories = {1}
             play.popper.tubes[tube][3].mask = {2}
-            play.popper.tubes[tube][4] = color(geeBee.col.r, geeBee.col.g, geeBee.col.b, geeBee.col.a)
+            play.popper.tubes[tube][4] = {
+                math.ceil((geeBee.col.r / 64) - 1),
+                math.ceil((geeBee.col.g / 64) - 1),
+                math.ceil((geeBee.col.b / 64) - 1)
+            }
             
-            play.popper.tubes[tube][5] = physics.body(CIRCLE, 2)
-            play.popper.tubes[tube][5].x = play.popper.tubes[tube][3].x + 17
-            play.popper.tubes[tube][5].y = play.popper.tubes[tube][3].y + 8
-
-            eyeJoint = physics.joint(REVOLUTE, play.popper.tubes[tube][3], play.popper.tubes[tube][5],
-                vec2(play.popper.tubes[tube][3].x + 15, play.popper.tubes[tube][3].y + 7))
-            eyeJoint.enableMotor = true
-            eyeJoint.maxMotorTorque = 100
-            eyeJoint.motorSpeed = 500
+            play.popper.tubes[tube][5] = {eyes = {}, joints = {}}
+            for i = 1, 1 do
+                play.popper.tubes[tube][5][eyes][i] = physics.body(CIRCLE, 2)
+                play.popper.tubes[tube][5][eyes][i].x = play.popper.tubes[tube][3].x - 17
+                play.popper.tubes[tube][5][eyes][i].y = play.popper.tubes[tube][3].y + 15
+                
+                play.popper.tubes[tube][5][joints][i] = physics.joint(REVOLUTE, play.popper.tubes[tube][3],
+                    play.popper.tubes[tube][5][eyes][i], vec2(play.popper.tubes[tube][3].x - 15,
+                    play.popper.tubes[tube][3].y + 15))
+                play.popper.tubes[tube][5][joints][i].enableMotor = true
+                play.popper.tubes[tube][5][joints][i].maxMotorTorque = 100
+                play.popper.tubes[tube][5][joints][i].motorSpeed = 500
+            end
             
-            local sideForce = math.random(-10, 10)
-            play.popper.tubes[tube][3]:applyLinearImpulse(vec2(sideForce, 150),
+            local sideForce = math.random(-15, 15)
+            play.popper.tubes[tube][3]:applyLinearImpulse(vec2(sideForce, 225),
                 vec2(play.popper.tubes[tube][3].x + math.random(-1, 1),
                 play.popper.tubes[tube][3].y)
             )
@@ -159,41 +146,24 @@ function Play()
     
     function play.popper.draw(params)
         pushStyle()
-       
+
         if geeBee.col then 
             for i = 1, numTubes do
                 if play.popper.tubes[i][2] == true then
-                    --[[
-                    fill(play.popper.tubes[i][4])
-                    ellipse(play.popper.tubes[i][3].x, play.popper.tubes[i][3].y, geeBeeSize)
-                    
                     pushMatrix()
-                    pushStyle()
-
+                    
                     translate(play.popper.tubes[i][3].x, play.popper.tubes[i][3].y)
                     rotate(play.popper.tubes[i][3].angle)
+                    sprite("Project:GeeBees/303", 0, 0, 75)
                     
-                    stroke(0, 0, 0, 255)
-                    strokeWidth(1)
-                    fill(255, 255, 255, 255)
-                    ellipse(15, 7, 15)
-
-                    popStyle()
                     popMatrix()
                     
                     pushStyle()
                     
                     fill(0, 0, 0, 255)
-                    ellipse(play.popper.tubes[i][5].x, play.popper.tubes[i][5].y, 7)
+                    ellipse(play.popper.tubes[tube][5][eyes][1].x, play.popper.tubes[tube][5][eyes][1].y, 7)
                     
                     popStyle()
-                    ]]--
-                    print(geeBeeSize)
-                    pushMatrix()
-                    translate(play.popper.tubes[i][3].x, play.popper.tubes[i][3].y)
-                    rotate(play.popper.tubes[i][3].angle)
-                    sprite("Dropbox:Apple 2", 0, 0, 75)
-                    popMatrix()
                 end
             end
         end
