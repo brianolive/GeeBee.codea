@@ -17,16 +17,16 @@ function studioIntroScene()
         action = action or scene.action(start)
 
         -- start, stop, object (draw), action (tween)
-        action{120, 222, studioIntro.whiteText, "whiteFadeIn"}
-        action{120, 230, studioIntro.b}
-        action{120, 138, studioIntro.falling, "colorFadeIn"}
-        action{223, 400, studioIntro.whiteText}
-        action{139, 400, studioIntro.falling}
-        action{231, 275, studioIntro.b, "rotate", {-5, tween.easing.cubicIn}}
-        action{276, 335, studioIntro.b, "rotate", {-30, tween.easing.bounceOut}}
-        action{401, 460, studioIntro.whiteText, "whiteFadeOut"}
-        action{336, 460, studioIntro.b}
-        action{401, 460, studioIntro.falling, "colorFadeOut"}
+        action{120, 222, "once", studioIntro.whiteText, "whiteFadeIn"}
+        action{120, 230, "once", studioIntro.b}
+        action{120, 138, "once", studioIntro.falling, "colorFadeIn"}
+        action{223, 400, "once", studioIntro.whiteText}
+        action{139, 400, "once", studioIntro.falling}
+        action{231, 275, "once", studioIntro.b, "rotate", {-5, tween.easing.cubicIn}}
+        action{276, 335, "once", studioIntro.b, "rotate", {-30, tween.easing.bounceOut}}
+        action{401, 460, "once", studioIntro.whiteText, "whiteFadeOut"}
+        action{336, 460, "once", studioIntro.b}
+        action{401, 460, "once", studioIntro.falling, "colorFadeOut"}
         
         stop = (time.total == start + 500)
     end
