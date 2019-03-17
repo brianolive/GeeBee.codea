@@ -1,25 +1,43 @@
 -- GeeBee
 
 function setup()
-    displayMode(FULLSCREEN)  
-    scenes(1)
+    displayMode(FULLSCREEN)
+    physics.gravity(0, -10)
+    --scenes(1)
     
     --table.insert(stage.left, time)
-    --gb, gbb = geeBee("123", WIDTH / 2, HEIGHT / 2, 100)
-    --gbb.gravityScale = 0
-
-    m = mesh()
-    m.texture = readImage("Project:atlas")
-    i = m:addRect(400, 400, 500, 500)
-    m:setRectTex(i, 0.625, 0.5, 0.125, 0.125)
+    
+    layers = {{}}
+    
+    geebees = layers[1]
+    geebees[1] = mesh()
+    geebees[1].texture = readImage("Project:geebees")
+    geebees[2] = {}
+    
+    for i = 1, 400 do
+        local id = tostring(math.random(0, 3)) .. tostring(math.random(0, 3)) .. tostring(math.random(0, 3))
+        if id == "000" then
+            id = "001"
+        end
+        geeBee(geebees, id, math.random(100, WIDTH - 100), math.random(100, HEIGHT - 100), 100)
+    end
 end
 
 function draw()
     background(0, 0, 0, 255)
 
-    time.start()
-    scenes.direct()
-    --gb()
+    geebees[1]:draw()
+
+    for _, v in pairs(geebees[2]) do
+        local attr = v[1]
+        local phy = v[2]
+        local meshRect = v[3]
+
+        geebees[1]:setRect(meshRect, phy.x, phy.y, attr.size.x, attr.size.y, math.rad(phy.angle))
+    end
+    
+    --time.start()
+    --scenes.direct()
 end
 
 --[[
