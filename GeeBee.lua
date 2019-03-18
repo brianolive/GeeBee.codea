@@ -1,63 +1,64 @@
---instance = geeBee("300", x, y, size)
+local defaultGBRadius = 50
+local bodySizeFactor = 0.81
+local eyeSizeFactor = 0.03
 
-function geeBee(layer, id, x, y, size)
-    local geeBeeMesh = layer[1]
-    local geeBeeRects = layer[2]
-    local phySize = size * 0.81
+--[[
+t = {
+    layer,
+    trunk,
+    id,
+    position,
+    radius,
+    type,
+    collidesWith,
+    gravityScale
+}
+]]--
+function gb(t)
+    -- Create new gb in prop trunk
+    t.trunk[#t.trunk + 1] = {}
     
-    -- New GeeBee
-    geeBeeRects[#geeBeeRects + 1] = {}
-    local newGeeBee = geeBeeRects[#geeBeeRects]
+    -- Create physics body
+    local body = physics.body(CIRCLE, (t.radius or defaultGBRadius) * bodySizeFactor)
+    body.position = t.position
+    body.categories = t.type or {1}
+    body.mask = t.collidesWith or {1}
+    body.gravityScale = t.gravityScale or 1
     
-    newGeeBee[1] = {["size"] = vec2(size, size)}
+    -- Store attributes
+    body.info = {}
+    body.info.id = t.id
     
-    newGeeBee[2] = physics.body(CIRCLE, phySize / 2)
-    newGeeBee[2].position = vec2(x, y)
-    newGeeBee[2].categories = {2}
-    newGeeBee[2].mask = {2}
-    newGeeBee[2].gravityScale = 0
-     
-    newGeeBee[3] = geeBeeMesh:addRect(newGeeBee[2].x,
-        newGeeBee[2].y, newGeeBee[1].size.x, newGeeBee[1].size.y)
-    tex = getGeeBeeTex(id)
-    geeBeeMesh:setRectTex(newGeeBee[3], tex.x, tex.y, 0.125, 0.125)
+    -- Add texture to rect, add rect to layer, store gb in trunk
+    body.info.rect = t.layer:addRect(body.x, body.y, body.radius * 2, body.radius * 2)
+    local texture = getGeeBeeTex(body.info.id)
+    t.layer:setRectTex(body.info.rect, texture.x, texture.y, 0.125, 0.125)
+
+    t.trunk[#t.trunk] = body
     
-    -- New GeeBee eyes
-    local eyePositions = getEyePositions(id, newGeeBee[1].size.x)
-    
-    local eyeStartPosX
-    if math.random() < 0.5 then
-        eyeStartPosX = -1
-    else
-        eyeStartPosX = 1
-    end
-    
-    local eyeStartPosY
-    if math.random() < 0.5 then
-        eyeStartPosY = -1
-    else
-        eyeStartPosY = 1
-    end
-    
-    for k, v in pairs(eyePositions) do
-        geeBeeRects[#geeBeeRects + 1] = {}
-        local newEye = geeBeeRects[#geeBeeRects]
+    -- Create eyes
+    local eyeCenters, eyeOffsets = getEyePositions(t.id, t.radius * 2)
+    for k, v in pairs(eyeCenters) do
+        -- Create new eye in prop trunk
+        t.trunk[#t.trunk + 1] = {}
         
-        newEye[1] = {["size"] = vec2(size * 0.08, size * 0.08)}
+        -- Create physics body
+        eyeBody = physics.body(CIRCLE, (t.radius * 2) * eyeSizeFactor)
+        eyeBody.position = vec2(body.x + eyeOffsets[k].x, body.y + eyeOffsets[k].y)
+        eyeBody.categories = {2}
+        eyeBody.mask = {} 
+        eyeBody.gravityScale = 40
         
-        newEye[2] = physics.body(CIRCLE, 5)
-        newEye[2].position = vec2(newGeeBee[2].x + v.x + (size * 0.02 * eyeStartPosX),
-            newGeeBee[2].y + v.y + (size * 0.02 * eyeStartPosY))
-        newEye[2].categories = {3}
-        newEye[2].mask = {} 
-        newEye[2].gravityScale = 40
-
-        newEye[3] = geeBeeMesh:addRect(newEye[2].x, newEye[2].y, newEye[1].size.x, newEye[1].size.y)
-        geeBeeMesh:setRectTex(newEye[3], 0.875, 0, 0.008, 0.008)
-
-        newEye[2].info = {}
-        newEye[2].info.joint = physics.joint(REVOLUTE, newGeeBee[2], newEye[2],
-            vec2(newGeeBee[2].x + v.x, newGeeBee[2].y + v.y))
+        -- Store attributes
+        eyeBody.info = {}
+        
+        eyeBody.info.rect = t.layer:addRect(body.x + eyeOffsets[k].x, body.y + eyeOffsets[k].y, (t.radius * 2) * eyeSizeFactor,
+            (t.radius * 2) * eyeSizeFactor)
+        t.layer:setRectTex(eyeBody.info.rect, 0.875, 0, 0.008, 0.008)
+        
+        eyeBody.info.joint = physics.joint(REVOLUTE, body, eyeBody, vec2(body.x + v.x, body.y + v.y))
+        
+        t.trunk[#t.trunk] = eyeBody
     end
 end
 
@@ -70,40 +71,63 @@ function getRgb(id)
 end
 
 function getEyePositions(id, size)
-    local eyePositions = {}
+    local eyeCenters = {}
+    local offset = 0.17
     local c = getRgb(id)
     
     if c.r == "0" then
-        eyePositions["r"] = nil
+        eyeCenters["r"] = nil
     elseif c.r == "1" then
-        eyePositions["r"] = vec2(-size * 0.21, -size * 0.21)
+        eyeCenters["r"] = vec2(-size * offset, -size * offset)
     elseif c.r == "2" then
-        eyePositions["r"] = vec2(-size * 0.21, 0)
+        eyeCenters["r"] = vec2(-size * offset, 0)
     elseif c.r == "3" then
-        eyePositions["r"] = vec2(-size * 0.21, size * 0.21)
+        eyeCenters["r"] = vec2(-size * offset, size * offset)
     end
     
     if c.g == "0" then
-        eyePositions["g"] = nil
+        eyeCenters["g"] = nil
     elseif c.g == "1" then
-        eyePositions["g"] = vec2(0,  -size * 0.21)
+        eyeCenters["g"] = vec2(0,  -size * offset)
     elseif c.g == "2" then
-        eyePositions["g"] = vec2(0, 0)
+        eyeCenters["g"] = vec2(0, 0)
     elseif c.g == "3" then
-        eyePositions["g"] = vec2(0, size * 0.21)
+        eyeCenters["g"] = vec2(0, size * offset)
     end
     
     if c.b == "0" then
-        eyePositions["b"] = nil
+        eyeCenters["b"] = nil
     elseif c.b == "1" then
-        eyePositions["b"] = vec2(size * 0.21, -size * 0.21)
+        eyeCenters["b"] = vec2(size * offset, -size * offset)
     elseif c.b == "2" then
-        eyePositions["b"] = vec2(size * 0.21, 0)
+        eyeCenters["b"] = vec2(size * offset, 0)
     elseif c.b == "3" then
-        eyePositions["b"] = vec2(size * 0.21, size * 0.21)
+        eyeCenters["b"] = vec2(size * offset, size * offset)
+    end
+    
+    -- Adjust each eye slightly off center
+    local eyeOffsets = {}
+    local eyeOffSet = 0.02
+    for k, v in pairs(eyeCenters) do
+        local eyeStartPosX
+        if math.random() < 0.5 then
+            eyeStartPosX = -1
+        else
+            eyeStartPosX = 1
+        end
+        eyeOffsets[k] = vec2(0, 0)
+        eyeOffsets[k].x = v.x + (size * eyeOffSet * eyeStartPosX)
+        
+        local eyeStartPosY
+        if math.random() < 0.5 then
+            eyeStartPosY = -1
+        else
+            eyeStartPosY = 1
+        end
+        eyeOffsets[k].y = v.y + (size * eyeOffSet * eyeStartPosY)
     end
 
-    return eyePositions
+    return eyeCenters, eyeOffsets
 end
 
 function getGeeBeeTex(id)
@@ -174,4 +198,13 @@ function getGeeBeeTex(id)
     }
     
     return vec2((texMap[id].y - 1) * 0.125, (8 - texMap[id].x) * 0.125)
+end
+
+function randomGBId()
+    local id = "000"
+    while id == "000" do
+        id = tostring(math.random(0, 3)) .. tostring(math.random(0, 3)) .. tostring(math.random(0, 3))
+    end
+    
+    return id
 end

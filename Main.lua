@@ -8,32 +8,33 @@ function setup()
     --table.insert(stage.left, time)
     
     layers = {{}}
+    layers[1] = mesh()
+    layers[1].texture = readImage("Project:geebees")
+    gbTrunk = {}
     
-    geebees = layers[1]
-    geebees[1] = mesh()
-    geebees[1].texture = readImage("Project:geebees")
-    geebees[2] = {}
+    local t = {
+        layer = layers[1],
+        trunk = gbTrunk,
+        radius = 100,
+        type = {1},
+        collidesWith = {1},
+        gravityScale = 1
+    }
     
-    for i = 1, 400 do
-        local id = tostring(math.random(0, 3)) .. tostring(math.random(0, 3)) .. tostring(math.random(0, 3))
-        if id == "000" then
-            id = "001"
-        end
-        geeBee(geebees, id, math.random(100, WIDTH - 100), math.random(100, HEIGHT - 100), 100)
+    for i = 1, 100 do
+        t.id = randomGBId()
+        t.position = vec2(math.random(100, WIDTH - 100), math.random(100, HEIGHT - 100))
+        gb(t)
     end
 end
 
 function draw()
     background(0, 0, 0, 255)
 
-    geebees[1]:draw()
+    layers[1]:draw()
 
-    for _, v in pairs(geebees[2]) do
-        local attr = v[1]
-        local phy = v[2]
-        local meshRect = v[3]
-
-        geebees[1]:setRect(meshRect, phy.x, phy.y, attr.size.x, attr.size.y, math.rad(phy.angle))
+    for _, v in pairs(gbTrunk) do
+        layers[1]:setRect(v.info.rect, v.position.x, v.position.y, v.radius * 2, v.radius * 2, math.rad(v.angle))
     end
     
     --time.start()
