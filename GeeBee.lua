@@ -1,6 +1,6 @@
 local defaultGBRadius = 50
 local bodySizeFactor = 0.81
-local eyeSizeFactor = 0.03
+local eyeSizeFactor = 0.042
 
 --[[
 t = {
@@ -19,7 +19,7 @@ function gb(t)
     t.trunk[#t.trunk + 1] = {}
     
     -- Create physics body
-    local body = physics.body(CIRCLE, (t.radius or defaultGBRadius) * bodySizeFactor)
+    local body = physics.body(CIRCLE, (t.radius or defaultGBRadius))
     body.position = t.position
     body.categories = t.type or {1}
     body.mask = t.collidesWith or {1}
@@ -52,8 +52,8 @@ function gb(t)
         -- Store attributes
         eyeBody.info = {}
         
-        eyeBody.info.rect = t.layer:addRect(body.x + eyeOffsets[k].x, body.y + eyeOffsets[k].y, (t.radius * 2) * eyeSizeFactor,
-            (t.radius * 2) * eyeSizeFactor)
+        eyeBody.info.rect = t.layer:addRect(body.x + eyeOffsets[k].x, body.y + eyeOffsets[k].y, (t.radius * 2.5) * eyeSizeFactor,
+            (t.radius * 2.5) * eyeSizeFactor)
         t.layer:setRectTex(eyeBody.info.rect, 0.875, 0, 0.008, 0.008)
         
         eyeBody.info.joint = physics.joint(REVOLUTE, body, eyeBody, vec2(body.x + v.x, body.y + v.y))
@@ -72,7 +72,7 @@ end
 
 function getEyePositions(id, size)
     local eyeCenters = {}
-    local offset = 0.17
+    local offset = 0.26
     local c = getRgb(id)
     
     if c.r == "0" then

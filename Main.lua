@@ -15,7 +15,7 @@ function setup()
     local t = {
         layer = layers[1],
         trunk = gbTrunk,
-        radius = 100,
+        radius = 50,
         type = {1},
         collidesWith = {1},
         gravityScale = 1
@@ -34,7 +34,7 @@ function draw()
     layers[1]:draw()
 
     for _, v in pairs(gbTrunk) do
-        layers[1]:setRect(v.info.rect, v.position.x, v.position.y, v.radius * 2, v.radius * 2, math.rad(v.angle))
+        layers[1]:setRect(v.info.rect, v.position.x, v.position.y, v.radius * 2.5, v.radius * 2.5, math.rad(v.angle))
     end
     
     --time.start()
