@@ -7,14 +7,16 @@ function setup()
     
     --table.insert(stage.left, time)
     
-    layers = {{}}
-    layers[1] = mesh()
-    layers[1].texture = readImage("Project:geebees")
-    gbTrunk = {}
+    screens = {}
+    screens[1] = {}
+    gbScreen = screens[1]
+    
+    gbScreen.mesh = mesh()
+    gbScreen.mesh.texture = readImage("Project:geebees")    
+    gbScreen.trunk = {}
     
     local t = {
-        layer = layers[1],
-        trunk = gbTrunk,
+        screen = gbScreen,
         radius = 50,
         type = {1},
         collidesWith = {1},
@@ -31,10 +33,10 @@ end
 function draw()
     background(0, 0, 0, 255)
 
-    layers[1]:draw()
-
-    for _, v in pairs(gbTrunk) do
-        layers[1]:setRect(v.info.rect, v.position.x, v.position.y, v.radius * 2.5, v.radius * 2.5, math.rad(v.angle))
+    gbScreen.mesh:draw()
+    
+    for _, v in pairs(gbScreen.trunk) do
+        gbScreen.mesh:setRect(v.info.rect, v.position.x, v.position.y, v.radius * 2.5, v.radius * 2.5, math.rad(v.angle))
     end
     
     --time.start()

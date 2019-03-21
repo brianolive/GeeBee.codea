@@ -7,7 +7,7 @@ function playScene()
     local start
     local stop
     local action
-    local layers = {}
+    local screens = {}
     
     function scene.enter()       
         return true
@@ -19,8 +19,9 @@ function playScene()
 
         -- start, stop, actionType, object (draw), action (tween)
 
-        for _, l in pairs(layers) do
-            l:draw()
+        for _, screen in pairs(screens) do
+            screen.mesh:draw()
+            screen.trunk.update()
         end
     end
     

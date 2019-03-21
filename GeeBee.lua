@@ -16,7 +16,7 @@ t = {
 ]]--
 function gb(t)
     -- Create new gb in prop trunk
-    t.trunk[#t.trunk + 1] = {}
+    t.screen.trunk[#t.screen.trunk + 1] = {}
     
     -- Create physics body
     local body = physics.body(CIRCLE, (t.radius or defaultGBRadius))
@@ -30,17 +30,17 @@ function gb(t)
     body.info.id = t.id
     
     -- Add texture to rect, add rect to layer, store gb in trunk
-    body.info.rect = t.layer:addRect(body.x, body.y, body.radius * 2, body.radius * 2)
+    body.info.rect = t.screen.mesh:addRect(body.x, body.y, body.radius * 2, body.radius * 2)
     local texture = getGeeBeeTex(body.info.id)
-    t.layer:setRectTex(body.info.rect, texture.x, texture.y, 0.125, 0.125)
+    t.screen.mesh:setRectTex(body.info.rect, texture.x, texture.y, 0.125, 0.125)
 
-    t.trunk[#t.trunk] = body
+    t.screen.trunk[#t.screen.trunk] = body
     
     -- Create eyes
     local eyeCenters, eyeOffsets = getEyePositions(t.id, t.radius * 2)
     for k, v in pairs(eyeCenters) do
         -- Create new eye in prop trunk
-        t.trunk[#t.trunk + 1] = {}
+        t.screen.trunk[#t.screen.trunk + 1] = {}
         
         -- Create physics body
         eyeBody = physics.body(CIRCLE, (t.radius * 2) * eyeSizeFactor)
@@ -52,13 +52,13 @@ function gb(t)
         -- Store attributes
         eyeBody.info = {}
         
-        eyeBody.info.rect = t.layer:addRect(body.x + eyeOffsets[k].x, body.y + eyeOffsets[k].y, (t.radius * 2.5) * eyeSizeFactor,
+        eyeBody.info.rect = t.screen.mesh:addRect(body.x + eyeOffsets[k].x, body.y + eyeOffsets[k].y, (t.radius * 2.5) * eyeSizeFactor,
             (t.radius * 2.5) * eyeSizeFactor)
-        t.layer:setRectTex(eyeBody.info.rect, 0.875, 0, 0.008, 0.008)
+        t.screen.mesh:setRectTex(eyeBody.info.rect, 0.875, 0, 0.008, 0.008)
         
         eyeBody.info.joint = physics.joint(REVOLUTE, body, eyeBody, vec2(body.x + v.x, body.y + v.y))
         
-        t.trunk[#t.trunk] = eyeBody
+        t.screen.trunk[#t.screen.trunk] = eyeBody
     end
 end
 
@@ -207,4 +207,15 @@ function randomGBId()
     end
     
     return id
+end
+
+--[[
+t = {
+     count   
+}
+]]--
+
+-- gbGroup
+function gbTrunk(t)
+    
 end
