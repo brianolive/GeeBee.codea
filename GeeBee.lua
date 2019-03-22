@@ -132,69 +132,22 @@ end
 
 function getGeeBeeTex(id)
     local texMap = {
-        ["001"] = vec2(1, 1),
-        ["002"] = vec2(1, 2),
-        ["003"] = vec2(1, 3),
-        ["010"] = vec2(1, 4),
-        ["011"] = vec2(1, 5),
-        ["012"] = vec2(1, 6),
-        ["013"] = vec2(1, 7),
-        ["020"] = vec2(1, 8),
-        ["021"] = vec2(2, 1),
-        ["022"] = vec2(2, 2),
-        ["023"] = vec2(2, 3),
-        ["030"] = vec2(2, 4),
-        ["031"] = vec2(2, 5),
-        ["032"] = vec2(2, 6),
-        ["033"] = vec2(2, 7),
-        ["100"] = vec2(2, 8),
-        ["101"] = vec2(3, 1),
-        ["102"] = vec2(3, 2),
-        ["103"] = vec2(3, 3),
-        ["110"] = vec2(3, 4),
-        ["111"] = vec2(3, 5),
-        ["112"] = vec2(3, 6),
-        ["113"] = vec2(3, 7),
-        ["120"] = vec2(3, 8),
-        ["121"] = vec2(4, 1),
-        ["122"] = vec2(4, 2),
-        ["123"] = vec2(4, 3),
-        ["130"] = vec2(4, 4),
-        ["131"] = vec2(4, 5),
-        ["132"] = vec2(4, 6),
-        ["133"] = vec2(4, 7),
-        ["200"] = vec2(4, 8),
-        ["201"] = vec2(5, 1),
-        ["202"] = vec2(5, 2),
-        ["203"] = vec2(5, 3),
-        ["210"] = vec2(5, 4),
-        ["211"] = vec2(5, 5),
-        ["212"] = vec2(5, 6),
-        ["213"] = vec2(5, 7),
-        ["220"] = vec2(5, 8),
-        ["221"] = vec2(6, 1),
-        ["222"] = vec2(6, 2),
-        ["223"] = vec2(6, 3),
-        ["230"] = vec2(6, 4),
-        ["231"] = vec2(6, 5),
-        ["232"] = vec2(6, 6),
-        ["233"] = vec2(6, 7),
-        ["300"] = vec2(6, 8),
-        ["301"] = vec2(7, 1),
-        ["302"] = vec2(7, 2),
-        ["303"] = vec2(7, 3),
-        ["310"] = vec2(7, 4),
-        ["311"] = vec2(7, 5),
-        ["312"] = vec2(7, 6),
-        ["313"] = vec2(7, 7),
-        ["320"] = vec2(7, 8),
-        ["321"] = vec2(8, 1),
-        ["322"] = vec2(8, 2),
-        ["323"] = vec2(8, 3),
-        ["330"] = vec2(8, 4),
-        ["331"] = vec2(8, 5),
-        ["332"] = vec2(8, 6),
-        ["333"] = vec2(8, 7)
+        ["001"] = vec2(1, 1), ["002"] = vec2(1, 2), ["003"] = vec2(1, 3),
+        ["010"] = vec2(1, 4), ["011"] = vec2(1, 5), ["012"] = vec2(1, 6), ["013"] = vec2(1, 7),
+        ["020"] = vec2(1, 8), ["021"] = vec2(2, 1), ["022"] = vec2(2, 2), ["023"] = vec2(2, 3),
+        ["030"] = vec2(2, 4), ["031"] = vec2(2, 5), ["032"] = vec2(2, 6), ["033"] = vec2(2, 7),
+        ["100"] = vec2(2, 8), ["101"] = vec2(3, 1), ["102"] = vec2(3, 2), ["103"] = vec2(3, 3),
+        ["110"] = vec2(3, 4), ["111"] = vec2(3, 5), ["112"] = vec2(3, 6), ["113"] = vec2(3, 7),
+        ["120"] = vec2(3, 8), ["121"] = vec2(4, 1), ["122"] = vec2(4, 2), ["123"] = vec2(4, 3),
+        ["130"] = vec2(4, 4), ["131"] = vec2(4, 5), ["132"] = vec2(4, 6), ["133"] = vec2(4, 7),
+        ["200"] = vec2(4, 8), ["201"] = vec2(5, 1), ["202"] = vec2(5, 2), ["203"] = vec2(5, 3),
+        ["210"] = vec2(5, 4), ["211"] = vec2(5, 5), ["212"] = vec2(5, 6), ["213"] = vec2(5, 7),
+        ["220"] = vec2(5, 8), ["221"] = vec2(6, 1), ["222"] = vec2(6, 2), ["223"] = vec2(6, 3),
+        ["230"] = vec2(6, 4), ["231"] = vec2(6, 5), ["232"] = vec2(6, 6), ["233"] = vec2(6, 7),
+        ["300"] = vec2(6, 8), ["301"] = vec2(7, 1), ["302"] = vec2(7, 2), ["303"] = vec2(7, 3),
+        ["310"] = vec2(7, 4), ["311"] = vec2(7, 5), ["312"] = vec2(7, 6), ["313"] = vec2(7, 7),
+        ["320"] = vec2(7, 8), ["321"] = vec2(8, 1), ["322"] = vec2(8, 2), ["323"] = vec2(8, 3),
+        ["330"] = vec2(8, 4), ["331"] = vec2(8, 5), ["332"] = vec2(8, 6), ["333"] = vec2(8, 7)
     }
     
     return vec2((texMap[id].y - 1) * 0.125, (8 - texMap[id].x) * 0.125)
@@ -216,6 +169,44 @@ t = {
 ]]--
 
 -- gbGroup
-function gbTrunk(t)
+
+function createGbScreen()
+    stage[1].screens[#stage[1].screens + 1] = {}
+    gbScreen = stage[1].screens[#stage[1].screens]
     
+    gbScreen.mesh = mesh()
+    gbScreen.mesh.texture = readImage("Project:geebees")    
+    gbScreen.trunk = {}
+    
+    return gbScreen
+end
+
+function gbTrunk(t)
+    gbScreen = createGbScreen()
+    
+    
+end
+
+function gbTrunkExample(t)
+    gbScreen = createGbScreen()
+    
+    local t = {
+        screen = gbScreen,
+        radius = 50,
+        type = {1},
+        collidesWith = {1},
+        gravityScale = 1
+    }
+    
+    for i = 1, 100 do
+        t.id = randomGBId()
+        t.position = vec2(math.random(100, WIDTH - 100), math.random(100, HEIGHT - 100))
+        gb(t)
+    end
+end
+
+function gbTrunkUpdate()    
+    for _, v in pairs(gbScreen.trunk) do
+        gbScreen.mesh:setRect(v.info.rect, v.position.x, v.position.y, v.radius * 2.5, v.radius * 2.5, math.rad(v.angle))
+    end
 end

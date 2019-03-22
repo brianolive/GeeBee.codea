@@ -1,5 +1,5 @@
 function scenes(n)
-    local currentScene = n or 1
+    currentScene = n or 1
     
     scenes = {
         {studioIntroScene},
@@ -7,8 +7,7 @@ function scenes(n)
     }
     
     function scenes.next(n, level)
-        local currentScene = n or currentScene + 1
-        local level = level or "Red"
+        currentScene = n or currentScene + 1
 
         if scenes[currentScene] then
             -- Scene, Level

@@ -7,7 +7,7 @@ function playScene()
     local start
     local stop
     local action
-    local screens = {}
+    scene.screens = {}
     
     function scene.enter()       
         return true
@@ -17,11 +17,12 @@ function playScene()
         start = start or time.total
         action = action or scene.action(start)
 
-        -- start, stop, actionType, object (draw), action (tween)
+        -- start, stop, method, parameters
+        action(1, 1, gbTrunkExample)
+        action(2, stop, gbTrunkUpdate)
 
-        for _, screen in pairs(screens) do
+        for _, screen in pairs(scene.screens) do
             screen.mesh:draw()
-            screen.trunk.update()
         end
     end
     
@@ -32,7 +33,7 @@ function playScene()
     function scene.touched(t)
 
     end
-    
+
     return scene
 end
 

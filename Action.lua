@@ -1,28 +1,20 @@
 function action(baseTime)
-    return function(t)
+    return function(...)
+        local t = table.pack(...)
+        
         local start = t[1]
         local stop = t[2]
-        local actionType = t[3]
-        local object = t[4]
-        local act = t[5]
-        local params = t[6] or {}
-        
-        if start ~= nil and stop ~= nil then
-            params.duration = ((stop - start) + 1) / 60
+        local method = t[3]
+
+        local params = {}
+        if #t > 3 then
+            for i = 4, #t do
+                params[#params + 1] = t[i]
+            end
         end
 
-        if act and (time.total == baseTime + start or (time.total > baseTime + start and
-            actionType == "each")) then
-            
-            object[act](params)
-        end
-        
-        if time.total >= baseTime + start and ((stop == nil) or
-            (time.total <= baseTime + stop)) then
-            
-            if object["draw"] then
-                object["draw"](params)
-            end
+        if time.total >= baseTime + start and (stop == nil or time.total <= baseTime + stop) then
+            method(table.unpack(params))
         end
     end
 end
