@@ -181,12 +181,6 @@ function createGbScreen()
     return gbScreen
 end
 
-function gbTrunk(t)
-    gbScreen = createGbScreen()
-    
-    
-end
-
 function gbTrunkExample(t)
     gbScreen = createGbScreen()
     

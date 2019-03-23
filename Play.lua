@@ -13,12 +13,16 @@ function playScene()
         return true
     end
     
+    gbTable = {
+        count = 50
+    }
+    
     function scene.act()
         start = start or time.total
         action = action or scene.action(start)
 
         -- start, stop, method, parameters
-        action(1, 1, gbTrunkExample)
+        action(1, 1, gbTrunk, gbTable)
         action(2, stop, gbTrunkUpdate)
 
         for _, screen in pairs(scene.screens) do
